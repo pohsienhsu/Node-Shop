@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const Cart = require('./cart');
+
 const getShopProductsFromFile = (cb) => {
   fs.readFile(filePath, (err, fileContent) => {
     if (err || !fileContent) {
@@ -31,6 +33,7 @@ module.exports = class Product {
         );
         const updatedProducts = [...products];
         updatedProducts[existingProductIndex] = this;
+        Cart.editProduct(this.id, this.price);
         fs.writeFile(filePath, JSON.stringify(updatedProducts), (err) => {
           console.log(err);
         });
@@ -49,13 +52,16 @@ module.exports = class Product {
   static deleteById(id) {
     getShopProductsFromFile((products) => {
       const existingProductIndex = products.findIndex((p) => p.id === id);
+      const price = products[existingProductIndex].price;
       if (existingProductIndex === -1) {
         console.log("Delete Failed. This product doesn't exist: " + id);
         return;
       }
       const updatedProducts = products.filter((p) => p.id !== id);
       fs.writeFile(filePath, JSON.stringify(updatedProducts), (err) => {
-        console.log(err);
+        if (!err) {
+          Cart.deleteProduct(id, price);
+        }
       });
     });
   }
