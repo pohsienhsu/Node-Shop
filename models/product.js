@@ -46,6 +46,20 @@ module.exports = class Product {
     }
   }
 
+  static deleteById(id) {
+    getShopProductsFromFile((products) => {
+      const existingProductIndex = products.findIndex((p) => p.id === id);
+      if (existingProductIndex === -1) {
+        console.log("Delete Failed. This product doesn't exist: " + id);
+        return;
+      }
+      const updatedProducts = products.filter((p) => p.id !== id);
+      fs.writeFile(filePath, JSON.stringify(updatedProducts), (err) => {
+        console.log(err);
+      });
+    });
+  }
+
   static fetchAll(cb) {
     getShopProductsFromFile(cb);
   }
