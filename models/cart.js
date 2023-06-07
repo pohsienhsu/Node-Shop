@@ -7,8 +7,20 @@ const filePath = path.join(rootDir, "data", "cart.json");
 module.exports = class Cart {
   constructor() {
     this.products = [];
-    this.totalPrice = 0;
+    this.totalPrice = 0.00;
   }
+
+  static getCart(cb) {
+    fs.readFile(filePath, (err, fileContent) => {
+      if (err) {
+        console.log(err);
+        cb(null);
+      } else {
+        const cart = JSON.parse(fileContent);
+        cb(cart)
+      }
+    })
+  } 
 
   static addProduct(id, price) {
     // Fetch the previous cart
@@ -63,7 +75,7 @@ module.exports = class Cart {
     });
   }
 
-  static deleteProduct(id, price) {
+  static deleteProduct(id, price, cb) {
     fs.readFile(filePath, (err, fileContent) => {
       if (err) {
         return;
@@ -85,6 +97,7 @@ module.exports = class Cart {
       fs.writeFile(filePath, JSON.stringify(updatedCart), err => {
         console.log(err);
       })
+      cb();
     });
   }
 };

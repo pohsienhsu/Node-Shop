@@ -60,7 +60,7 @@ module.exports = class Product {
       const updatedProducts = products.filter((p) => p.id !== id);
       fs.writeFile(filePath, JSON.stringify(updatedProducts), (err) => {
         if (!err) {
-          Cart.deleteProduct(id, price);
+          Cart.deleteProduct(id, price, () => {});
         }
       });
     });
