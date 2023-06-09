@@ -43,9 +43,8 @@ exports.getCart = (req, res, next) => {
   Cart.getCart().then(([rows, fieldData]) => {
     let totalPrice = 0;
     for (let row of rows) {
-      totalPrice = totalPrice + (row.price * row.quantity);
+      totalPrice = totalPrice + row.price * row.quantity;
     }
-    console.log(rows);
     res.render("shop/cart", {
       path: "/cart",
       pageTitle: "Your Cart",
@@ -57,19 +56,20 @@ exports.getCart = (req, res, next) => {
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.findById(prodId, (product) => {
-    Cart.addProduct(prodId, product.price);
-  });
-  res.redirect("/cart");
+  Cart.addProduct(prodId)
+    .then(() => {
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const { id } = req.body;
-  Product.findById(id, (product) => {
-    Cart.deleteProduct(id, product.price, () => {
+  Cart.deleteProduct(id)
+    .then(() => {
       res.redirect("/cart");
-    });
-  });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getOrders = (req, res, next) => {
