@@ -3,7 +3,7 @@ This section is to create the database <user> as well as the <password> for the 
 Then, grant root priviledges to the created database user. If you already have a SQL user setup with
 all the permissions, you can ignore this section.
 Todos:
-1. Replace <user> & <password> with the username and user password of your choice
+1. Replace <user> (3 of them) & <password> (1 only) with the username and user password of your choice
 */
 DROP USER IF EXISTS '<user>'@'localhost';
 CREATE USER '<user>'@'localhost' IDENTIFIED BY '<password>';
@@ -14,7 +14,7 @@ FLUSH PRIVILEGES;
 This section is to create all the tables required for the database, including
 products, cart_items.
 Todos:
-1. Replace the database name <database>. This should be the name of the database you're planning to store the data.
+1. Replace the database name <database> (3 of them). This should be the name of the database you're planning to store the data.
 */
 DROP TABLE IF EXISTS `products`;
 CREATE TABLE `<database>`.`products` (
@@ -35,7 +35,7 @@ CREATE TABLE `<database>`.`cart_item` (
   INDEX `id_idx` (`product_id` ASC) VISIBLE,
   CONSTRAINT `id`
     FOREIGN KEY (`product_id`)
-    REFERENCES `node_shop`.`products` (`id`)
+    REFERENCES `<database>`.`products` (`id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE);
 
@@ -43,7 +43,7 @@ CREATE TABLE `<database>`.`cart_item` (
 This section is to make sure that deleting an object in products table would also delete the associated cart items
 in the cart_items table
 Todos:
-1. Replace <user> with the username
+1. Replace <user> (1 only) with the username
 */
 CREATE DEFINER=`<user>`@`localhost` TRIGGER `products_AFTER_DELETE` AFTER DELETE ON `products` FOR EACH ROW BEGIN
 	DELETE FROM cart_items WHERE old.id = cart_items.product_id;
