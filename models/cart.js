@@ -1,26 +1,22 @@
 const fs = require("fs");
 const path = require("path");
 
+const db = require("../util/database");
+
 const rootDir = require("../util/path");
 const filePath = path.join(rootDir, "data", "cart.json");
 
 module.exports = class Cart {
   constructor() {
     this.products = [];
-    this.totalPrice = 0.00;
+    this.totalPrice = 0.0;
   }
 
   static getCart(cb) {
-    fs.readFile(filePath, (err, fileContent) => {
-      if (err) {
-        console.log(err);
-        cb(null);
-      } else {
-        const cart = JSON.parse(fileContent);
-        cb(cart)
-      }
-    })
-  } 
+    return db.execute(
+      "SELECT products.id, products.title, products.price, cart_items.quantity FROM cart_items INNER JOIN products ON products.id = cart_items.id;"
+    );
+  }
 
   static addProduct(id, price) {
     // Fetch the previous cart
@@ -38,7 +34,7 @@ module.exports = class Cart {
       if (existingProduct) {
         updatedProduct = { ...existingProduct };
         updatedProduct.quantity = existingProduct.quantity + 1;
-        updatedProduct.price = price
+        updatedProduct.price = price;
         cart.products = [...cart.products];
         cart.products[existingProductIdx] = updatedProduct;
       } else {
@@ -58,14 +54,15 @@ module.exports = class Cart {
         return;
       }
       const cart = JSON.parse(fileContent);
-      const updatedCart = {...cart}
+      const updatedCart = { ...cart };
       // Check if product exist
-      const productIdx = updatedCart.products.findIndex(p => p.id === id);
+      const productIdx = updatedCart.products.findIndex((p) => p.id === id);
       if (productIdx === -1) {
         return;
       } else {
-        const { quantity, price } = updatedCart.products[productIdx]
-        updatedCart.totalPrice = updatedCart.totalPrice - (quantity * price) + (quantity * updatedPrice);
+        const { quantity, price } = updatedCart.products[productIdx];
+        updatedCart.totalPrice =
+          updatedCart.totalPrice - quantity * price + quantity * updatedPrice;
         updatedCart.products[productIdx].price = updatedPrice;
       }
       // Write with updated cart
@@ -81,22 +78,22 @@ module.exports = class Cart {
         return;
       }
       const cart = JSON.parse(fileContent);
-      const updatedCart = {...cart}
+      const updatedCart = { ...cart };
       // Find the product
-      const product = updatedCart.products.find(p => p.id === id);
+      const product = updatedCart.products.find((p) => p.id === id);
       if (!product) {
         console.log("Product not in cart");
         return;
       }
       const quantity = product.quantity;
       // Remove product
-      updatedCart.products = updatedCart.products.filter(p => p.id !== id);
+      updatedCart.products = updatedCart.products.filter((p) => p.id !== id);
       // Subtract by price
-      updatedCart.totalPrice = updatedCart.totalPrice - (price * quantity);
+      updatedCart.totalPrice = updatedCart.totalPrice - price * quantity;
       // Write with updated cart
-      fs.writeFile(filePath, JSON.stringify(updatedCart), err => {
+      fs.writeFile(filePath, JSON.stringify(updatedCart), (err) => {
         console.log(err);
-      })
+      });
       cb();
     });
   }
