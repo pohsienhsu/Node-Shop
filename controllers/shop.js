@@ -51,8 +51,6 @@ exports.getCart = (req, res, next) => {
       for (let product of products) {
         totalPrice = totalPrice + product.price * product.cartItem.quantity;
       }
-      console.log(products);
-      console.log(totalPrice);
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
@@ -78,7 +76,6 @@ exports.postCart = (req, res, next) => {
       if (products.length > 0) {
         product = products[0];
       }
-
       if (product) {
         const oldQuantity = product.cartItem.quantity;
         newQuantity = oldQuantity + 1;
@@ -101,7 +98,11 @@ exports.postCartDeleteProduct = (req, res, next) => {
   const { id: prodId } = req.body;
   req.user.getCart()
   .then(cart => {
-    return CartItem.destroy({where: {cartId: cart.id, productId: prodId}});
+    return cart.getProducts({where: {id: prodId}});
+  })
+  .then(products => {
+    const product = products[0];
+    return product.cartItem.destroy();
   })
   .then(result => {
     console.log("Cart Item Deleted");
