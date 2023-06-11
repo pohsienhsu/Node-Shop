@@ -18,6 +18,12 @@
                         </li>
                     <% }) %>
                 </ul>
+                <div class="centered">
+                  <h1>Total Amount: <%= totalPrice.toFixed(2) %></h1>
+                  <form action="/create-order" method="POST">
+                    <button type="submit" class="btn">Order</button>
+                  </form>
+                </div>
             <% } else { %>
                 <h1>No Products in Cart!</h1>
             <% } %>

@@ -68,7 +68,30 @@ sequelize
     if (!user) {
       return User.create({name: "Admin", email: "admin@gmail.com"})
       .then((user) => {
-        return user.createCart();
+        return user.createCart()
+        .then(cart => {
+          const products = [
+            {
+              title: "Fuji Camera",
+              imageUrl:
+                "https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&w=600",
+              price: 99.99,
+              description: "The latest camera technology!",
+            },
+            {
+              title: "Scented Candle",
+              imageUrl:
+                "https://images.pexels.com/photos/3270223/pexels-photo-3270223.jpeg?auto=compress&cs=tinysrgb&w=600",
+              price: 15.99,
+              description: "A scent of the pine forest.",
+            },
+          ];
+          return user.createProduct(products[0]);
+        })
+        .then(() => {
+          console.log("Create new admin user!")
+        })
+        .catch(err => console.log(err));
       })
       .catch(err => console.log(err))
     }

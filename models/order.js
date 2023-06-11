@@ -5,7 +5,7 @@ const sequelize = require('../util/database');
 const Order = sequelize.define('order', {
   id: {
     type: Sequelize.INTEGER,
-    autoIncrement: false,
+    autoIncrement: true,
     allowNull: false,
     primaryKey: true
   }
