@@ -10,6 +10,8 @@ const Product = require("./models/product");
 const Cart = require('./models/cart');
 const CartItem = require('./models/cart-item');
 const User = require("./models/user");
+const Order = require("./models/order");
+const OrderItem = require("./models/order-item");
 
 // Define Sequeulize associations
 User.hasMany(Product);
@@ -24,6 +26,12 @@ Cart.belongsTo(User, {constraint: true, onDelete: "CASCADE"});
 
 Cart.belongsToMany(Product, {through: CartItem});
 Product.belongsToMany(Cart, {through: CartItem});
+
+User.hasMany(Order);
+Order.belongsTo(User, {constraint: true, onDelete: "CASCADE"});
+
+Order.belongsToMany(Product, {through: OrderItem});
+Product.belongsToMany(Order, {through: OrderItem});
 
 
 const app = express();
@@ -53,6 +61,19 @@ app.use(errorController.get404);
 
 sequelize
   .sync()
+  .then(() => {
+    return User.findByPk(1);
+  })
+  .then((user) => {
+    if (!user) {
+      return User.create({name: "Admin", email: "admin@gmail.com"})
+      .then((user) => {
+        return user.createCart();
+      })
+      .catch(err => console.log(err))
+    }
+    return user.getCart();
+  })
   .then(() => {
     app.listen(3000);
   }) 
