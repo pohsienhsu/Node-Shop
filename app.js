@@ -7,7 +7,8 @@ const bodyParser = require("body-parser");
 const errorController = require("./controllers/error");
 const sequelize = require("./util/database");
 const Product = require("./models/product");
-// const Cart = require('./models/cart');
+const Cart = require('./models/cart');
+const CartItem = require('./models/cart-item');
 const User = require("./models/user");
 
 // Define Sequeulize associations
@@ -17,6 +18,13 @@ Product.belongsTo(User, {
   onDelete: "CASCADE",
   onUpdate: "CASCADE",
 });
+
+User.hasOne(Cart);
+Cart.belongsTo(User, {constraint: true, onDelete: "CASCADE"});
+
+Cart.belongsToMany(Product, {through: CartItem});
+Product.belongsToMany(Cart, {through: CartItem});
+
 
 const app = express();
 
@@ -44,7 +52,7 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 sequelize
-  .sync()
+  .sync({force: true})
   .then((result) => {
     return User.findByPk(1);
   })
