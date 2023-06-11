@@ -52,17 +52,8 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 sequelize
-  .sync({force: true})
-  .then((result) => {
-    return User.findByPk(1);
-  })
-  .then((user) => {
-    if (!user) {
-      return User.create({ name: "Admin", email: "admin@gmail.com" });
-    }
-    return user;
-  })
-  .then((user) => {
+  .sync()
+  .then(() => {
     app.listen(3000);
-  })
+  }) 
   .catch((err) => console.log(err));
