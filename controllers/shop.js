@@ -94,59 +94,63 @@ exports.postCart = (req, res, next) => {
 
 exports.postCartDeleteProduct = (req, res, next) => {
   const { id: prodId } = req.body;
-  req.user.getCart()
-  .then(cart => {
-    return cart.getProducts({where: {id: prodId}});
-  })
-  .then(products => {
-    const product = products[0];
-    return product.cartItem.destroy();
-  })
-  .then(result => {
-    console.log("Cart Item Deleted");
-    res.redirect('/cart');
-  })
-  .catch(err => console.log(err));
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts({ where: { id: prodId } });
+    })
+    .then((products) => {
+      const product = products[0];
+      return product.cartItem.destroy();
+    })
+    .then((result) => {
+      console.log("Cart Item Deleted");
+      res.redirect("/cart");
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getOrders = (req, res, next) => {
-  res.render("shop/orders", {
-    path: "/orders",
-    pageTitle: "Your Orders",
-    items: [],
-  });
+  req.user
+    .getOrders({ include: ["products"] })
+    .then((orders) => {
+      console.log(orders);
+      res.render("shop/orders", {
+        path: "/orders",
+        pageTitle: "Your Orders",
+        orders: orders,
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.postOrder = (req, res, next) => {
   let fetchedCart;
-  req.user.getCart()
-    .then(cart => {
+  req.user
+    .getCart()
+    .then((cart) => {
       fetchedCart = cart;
       return cart.getProducts();
     })
-    .then(products => {
-      return req.user.createOrder()
+    .then((products) => {
+      return req.user
+        .createOrder()
         .then((order) => {
           console.log(order);
-          return order.addProducts(products.map(product => {
-            product.orderItem = {quantity: product.cartItem.quantity}
-            return product;
-          }))
+          return order.addProducts(
+            products.map((product) => {
+              product.orderItem = { quantity: product.cartItem.quantity };
+              return product;
+            })
+          );
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     })
-    .then(result => {
+    .then((result) => {
       return fetchedCart.setProducts(null);
     })
-    .then(result => {
-      res.redirect('/orders');
+    .then((result) => {
+      res.redirect("/orders");
     })
-    .catch(err => console.log(err));
-}
-
-exports.getCheckout = (req, res, next) => {
-  res.render("shop/checkout", {
-    path: "/checkout",
-    pageTitle: "Checkout",
-  });
+    .catch((err) => console.log(err));
 };
