@@ -40,7 +40,7 @@ exports.getEditProduct = (req, res, next) => {
     return res.redirect("/");
   }
   const prodId = req.params.productId;
-  Product.findOne(new ObjectId(prodId))
+  Product.findById(new ObjectId(prodId))
     .then((product) => {
       if (!product) {
         return res.redirect("/admin/products");
@@ -55,22 +55,16 @@ exports.getEditProduct = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-// exports.postEditProduct = (req, res, next) => {
-//   const { id, title, imageUrl, price, description } = req.body;
-//   Product.findByPk(id)
-//     .then((product) => {
-//       product.title = title;
-//       product.imageUrl = imageUrl;
-//       product.price = price;
-//       product.description = description;
-//       return product.save();
-//     })
-//     .then((result) => {
-//       console.log("Updated Product!");
-//       res.redirect("/admin/products");
-//     })
-//     .catch((err) => console.log(err));
-// };
+exports.postEditProduct = (req, res, next) => {
+  const { id, title, imageUrl, price, description } = req.body;
+  const product = new Product(title, imageUrl, price, description, id);
+  product.save()
+    .then((result) => {
+      console.log("Updated Product!");
+      res.redirect("/admin/products");
+    })
+    .catch((err) => console.log(err));
+};
 
 // exports.postDeleteProduct = (req, res, next) => {
 //   const { id } = req.body;
