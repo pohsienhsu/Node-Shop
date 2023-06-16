@@ -22,4 +22,8 @@ const orderSchema = new Schema({
   ],
 });
 
+orderSchema.methods.getOrder = function(userId) {
+  
+}
+
 module.exports = mongoose.model("Order", orderSchema);

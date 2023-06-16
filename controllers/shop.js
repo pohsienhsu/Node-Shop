@@ -90,18 +90,18 @@ exports.postCartDeleteProduct = (req, res, next) => {
     .catch((err) => console.log(err));
 };
 
-// exports.getOrders = (req, res, next) => {
-//   req.user
-//     .getOrders()
-//     .then((orders) => {
-//       res.render("shop/orders", {
-//         path: "/orders",
-//         pageTitle: "Your Orders",
-//         orders: orders,
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// };
+exports.getOrders = (req, res, next) => {
+  Order.find({"user.userId": req.user._id})
+    .then((orders) => {
+      console.log(orders);
+      res.render("shop/orders", {
+        path: "/orders",
+        pageTitle: "Your Orders",
+        orders: orders,
+      });
+    })
+    .catch((err) => console.log(err));
+};
 
 exports.postOrder = (req, res, next) => {
   req.user
