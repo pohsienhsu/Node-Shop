@@ -4,13 +4,21 @@ require("dotenv").config({ path: __dirname + "/.env" });
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 const errorController = require("./controllers/error");
 // const mongoConnect = require("./util/database").mongoConnect;
 const User = require("./models/user");
 
-const app = express();
+const MONGODB_URI = `mongodb+srv://${process.env["MONGO_USER"]}:${process.env["MONGO_PASSWORD"]}@${process.env["MONGO_CLUSTER"]}/${process.env["MONGO_DATABASE"]}`;
 
+const app = express();
+const store = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: 'sessions',
+  
+});
 app.set("view engine", "ejs");
 app.set("views", "views");
 
@@ -20,15 +28,25 @@ const authRoutes = require("./routes/auth");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(session({
+  secret: 'my secret',
+  resave: false,
+  saveUninitialized: false,
+  store: store,
+}));
 
 app.use((req, res, next) => {
-  User.findById("648ca51fb8eb40340c2ea05e")
-    .then((user) => {
-      req.user = user;
-      next();
-    })
-    .catch((err) => console.log(err));
-});
+  if (req.session.user) {
+    User.findById(req.session.user._id)
+      .then(user => {
+        req.user = user;
+        next();
+      })
+      .catch(err => console.log(err));
+  } else {
+    next();
+  }
+})
 
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
@@ -37,9 +55,7 @@ app.use(authRoutes);
 app.use(errorController.get404);
 
 mongoose
-  .connect(
-    `mongodb+srv://${process.env["MONGO_USER"]}:${process.env["MONGO_PASSWORD"]}@${process.env["MONGO_CLUSTER"]}/${process.env["MONGO_DATABASE"]}?retryWrites=true&w=majority`
-  )
+  .connect(MONGODB_URI)
   .then(() => {
     User.findOne().then(user => {
       if (!user) {
