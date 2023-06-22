@@ -4,3 +4,8 @@
     margin: auto;
     display: block;
 }
+
+.login-buttons {
+  display: flex;
+  justify-content: space-evenly;
+}

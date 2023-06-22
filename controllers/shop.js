@@ -2,6 +2,7 @@ const Product = require("../models/product");
 const Order = require("../models/order");
 
 exports.getIndex = (req, res, next) => {
+
   Product.find()
     .then((products) => {
       res.render("shop/index", {
@@ -59,7 +60,6 @@ exports.getCart = (req, res, next) => {
       for (let product of products) {
         totalPrice = totalPrice + product.price * product.quantity;
       }
-      console.log(products);
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",
@@ -97,7 +97,6 @@ exports.postCartDeleteProduct = (req, res, next) => {
 exports.getOrders = (req, res, next) => {
   Order.find({"user.userId": req.user._id})
     .then((orders) => {
-      console.log(orders);
       res.render("shop/orders", {
         path: "/orders",
         pageTitle: "Your Orders",
