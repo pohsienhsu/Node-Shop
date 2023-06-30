@@ -16,6 +16,7 @@
                 <label for="password">Password</label>
                 <input type="password" name="password" id="password" >
             </div>
+            <input type="hidden" name="CSRFToken" value="<%= csrfToken %>" >
             <div class="login-buttons">
               <button class="btn" type="submit">Login</button>
               <a class="btn" href="/signup">Sign up</a>
