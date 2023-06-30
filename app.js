@@ -8,6 +8,7 @@ const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 // const csrf = require("csurf");
 const {csrfSync} = require('csrf-sync');
+const flash = require('connect-flash');
 
 const errorController = require("./controllers/error");
 // const mongoConnect = require("./util/database").mongoConnect;
@@ -26,6 +27,8 @@ const { csrfSynchronisedProtection } = csrfSync({
     return req.body["CSRFToken"];
   }, // Used to retrieve the token submitted by the user in a form
 });
+
+app.use(flash());
 
 app.set("view engine", "ejs");
 app.set("views", "views");
