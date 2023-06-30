@@ -62,7 +62,6 @@ exports.getSignup = (req, res, next) => {
   } else {
     errorMessage = null;
   }
-  console.log(errorMessage);
   return res.render("auth/signup", {
     pageTitle: "Signup",
     path: "/signup",
