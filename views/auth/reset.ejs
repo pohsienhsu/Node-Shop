@@ -15,19 +15,11 @@
                 <label for="email">E-Mail</label>
                 <input type="email" name="email" id="email" >
             </div>
-            <div class="form-control">
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password" >
-            </div>
             <input type="hidden" name="CSRFToken" value="<%= csrfToken %>" >
             <div class="login-buttons">
-              <button class="btn" type="submit">Login</button>
+              <button class="btn" type="submit">Reset Password</button>
+              <a class="btn danger" href="/login">Cancel</a>
             </div>
         </form>
-        <div class="auth-buttons">
-          <a class="btn" href="/signup">Sign up</a>
-          <a class="btn" href="/reset">Reset Password</a>
-        </div>
-
     </main>
 <%- include('../includes/end.ejs') %>
