@@ -1,9 +1,19 @@
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
 
 const User = require("../models/user");
 
+const transporter = nodemailer.createTransport({
+  host: process.env["MAILTRAP_HOST"],
+  port: process.env["MAILTRAP_PORT"],
+  auth: {
+    user: process.env["MAILTRAP_USER"],
+    pass: process.env["MAILTRAP_PASSWORD"],
+  },
+});
+
 exports.getLogin = (req, res, next) => {
-  let errorMessage = req.flash('error');
+  let errorMessage = req.flash("error");
   if (errorMessage.length > 0) {
     errorMessage = errorMessage[0];
   } else {
@@ -15,7 +25,7 @@ exports.getLogin = (req, res, next) => {
     return res.render("auth/login", {
       pageTitle: "Login",
       path: "/login",
-      errorMessage: errorMessage
+      errorMessage: errorMessage,
     });
   }
 };
@@ -42,7 +52,7 @@ exports.postLogin = (req, res, next) => {
           })
           .catch((err) => console.log(err));
       } else {
-        req.flash('error', 'Invalid email or password.');
+        req.flash("error", "Invalid email or password.");
         res.redirect("/login");
       }
     })
@@ -65,7 +75,7 @@ exports.getSignup = (req, res, next) => {
   return res.render("auth/signup", {
     pageTitle: "Signup",
     path: "/signup",
-    errorMessage: errorMessage
+    errorMessage: errorMessage,
   });
 };
 
@@ -74,7 +84,7 @@ exports.postSignup = (req, res, next) => {
   User.findOne({ email: email })
     .then((userDoc) => {
       if (userDoc) {
-        req.flash('error', 'This email has already been registered.');
+        req.flash("error", "This email has already been registered.");
         return res.redirect("/signup");
       } else {
         return bcrypt
@@ -89,7 +99,24 @@ exports.postSignup = (req, res, next) => {
             return user.save();
           })
           .then((result) => {
-            return res.redirect("/login");
+            res.redirect("/login");
+            return transporter.sendMail(
+              {
+                to: email,
+                from: "nodeshop@email.com",
+                subject: "NodeShop signup succeeded!",
+                html: "<h1>You successfully signed up!</h1>",
+              },
+              (err, info) => {
+                if (err) {
+                  return console.log(err);
+                }
+                console.log("Message send: %s", info.messageId);
+              }
+            );
+          })
+          .catch((err) => {
+            console.log(err);
           });
       }
     })
