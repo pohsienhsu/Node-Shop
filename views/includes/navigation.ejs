@@ -39,7 +39,7 @@
     <ul class="main-header__item-list">
       <% if (!isAuthenticated) { %>
       <li class="main-header__item">
-        <a class="<%= path === '/login' || path === '/signup' ? 'active' : '' %>" href="/login"
+        <a class="<%= path === '/login' || path === '/signup' || path === '/reset' ? 'active' : '' %>" href="/login"
           >Login</a
         >
       </li>
@@ -91,7 +91,7 @@
    <ul class="mobile-nav__item-list">
       <% if (!isAuthenticated) { %>
       <li class="mobile-nav__item">
-        <a class="<%= path === '/login' || path === '/signup' ? 'active' : '' %>" href="/login"
+        <a class="<%= path === '/login' || path === '/signup' || path === '/reset' ? 'active' : '' %>" href="/login"
           >Login</a
         >
       </li>

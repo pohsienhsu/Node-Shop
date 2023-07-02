@@ -6,6 +6,15 @@
 }
 
 .login-buttons {
+  margin: 1rem;
   display: flex;
   justify-content: space-evenly;
+}
+
+.auth-buttons {
+  width: 20rem;
+  max-width: 90%;
+  margin: auto;
+  display: flex;
+  justify-content: space-around;
 }
