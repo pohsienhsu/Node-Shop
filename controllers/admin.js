@@ -9,7 +9,7 @@ exports.getAddProduct = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
-    editing: false
+    editing: false,
   });
 };
 
@@ -20,7 +20,7 @@ exports.postAddProduct = (req, res, next) => {
     imageUrl: imageUrl,
     price: price,
     description: description,
-    userId: req.user._id
+    userId: req.user._id,
   });
   product
     .save()
@@ -32,12 +32,12 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.find()
+  Product.find({ userId: req.user._id })
     .then((products) => {
       res.render("admin/products", {
         prods: products,
         pageTitle: "Admin Products",
-        path: "/admin/products"
+        path: "/admin/products",
       });
     })
     .catch((err) => console.log(err));
@@ -58,7 +58,7 @@ exports.getEditProduct = (req, res, next) => {
         pageTitle: `Edit ${product.title}`,
         path: "/admin/edit-product",
         editing: editMode,
-        product: product
+        product: product,
       });
     })
     .catch((err) => console.log(err));
@@ -69,22 +69,27 @@ exports.postEditProduct = (req, res, next) => {
 
   Product.findById(id)
     .then((product) => {
+      if (product.userId.toString() !== req.user._id.toString()) {
+        return res.redirect("/");
+      }
       product.title = title;
       product.imageUrl = imageUrl;
       product.price = price;
       product.description = description;
-      product.save();
-    })
-    .then((result) => {
-      console.log("Updated Product!");
-      res.redirect("/admin/products");
+      product
+        .save()
+        .then((result) => {
+          console.log("Updated Product!");
+          res.redirect("/admin/products");
+        })
+        .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
 };
 
 exports.postDeleteProduct = (req, res, next) => {
   const { id } = req.body;
-  Product.findByIdAndDelete(id)
+  Product.deleteOne({ _id: id, userId: req.user._id })
     .then((result) => {
       console.log("Deleted Product!");
       res.redirect("/admin/products");

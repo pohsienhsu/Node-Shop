@@ -227,11 +227,11 @@ exports.postNewPassword = (req, res, next) => {
           user.resetTokenExpiration = undefined;
           return user.save();
         })
+        .then((result) => {
+          console.log("Password Updated!");
+          return res.redirect("/login");
+        })
         .catch((err) => console.log(err));
-    })
-    .then((result) => {
-      console.log("Password Updated!");
-      return res.redirect("/login");
     })
     .catch((err) => console.log(err));
 };
