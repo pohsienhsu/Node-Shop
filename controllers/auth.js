@@ -67,14 +67,28 @@ exports.postLogin = (req, res, next) => {
                 res.redirect("/");
               });
             } else {
-              req.flash("error", "Invalid email or password.");
-              return res.redirect("/login");
+              return res.status(422).render("auth/login", {
+                path: "/login",
+                pageTitle: "Login",
+                errorMessage: "Invalid email or password",
+                prevInput: {
+                  email: email,
+                },
+                validationErrors: [],
+              });
             }
           })
           .catch((err) => console.log(err));
       } else {
-        req.flash("error", "Invalid email or password.");
-        return res.redirect("/login");
+        return res.status(422).render("auth/login", {
+          path: "/login",
+          pageTitle: "Login",
+          errorMessage: "Invalid email or password",
+          prevInput: {
+            email: email,
+          },
+          validationErrors: [],
+        });
       }
     })
     .catch((err) => console.log(err));
