@@ -10,10 +10,10 @@
         <% if (errorMessage) { %>
           <div class="user-message user-message--error"><%= errorMessage %></div>
         <% } %>
-        <form class="login-form" action="/signup" method="POST">
+        <form class="login-form" action="/signup" method="POST" novalidate>
             <div class="form-control">
                 <label for="email">E-Mail</label>
-                <input type="email" name="email" id="email">
+                <input type="email" name="email" id="email" value="<%= prevInput.email %>">
             </div>
             <div class="form-control">
                 <label for="name">Name</label>

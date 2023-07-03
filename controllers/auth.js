@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
+const { validationResult } = require("express-validator");
 
 const User = require("../models/user");
 
@@ -27,13 +28,30 @@ exports.getLogin = (req, res, next) => {
       pageTitle: "Login",
       path: "/login",
       errorMessage: errorMessage,
+      prevInput: {
+        email: ""
+      }
     });
   }
 };
 
 exports.postLogin = (req, res, next) => {
   const { email, password } = req.body;
-  User.findOne({ email: email })
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    return res.status(422).render("auth/login", {
+      path: "/login",
+      pageTitle: "Login",
+      errorMessage: errors.array().map(err => err.msg)[0],
+      prevInput: {
+        email: email
+      }
+    });
+  }
+
+  User.findOne({ email: value })
     .then((user) => {
       if (user) {
         return bcrypt
@@ -54,7 +72,7 @@ exports.postLogin = (req, res, next) => {
           .catch((err) => console.log(err));
       } else {
         req.flash("error", "Invalid email or password.");
-        res.redirect("/login");
+        return res.redirect("/login");
       }
     })
     .catch((err) => console.log(err));
@@ -77,51 +95,56 @@ exports.getSignup = (req, res, next) => {
     pageTitle: "Signup",
     path: "/signup",
     errorMessage: errorMessage,
+    prevInput: {
+      email: ""
+    }
   });
 };
 
 exports.postSignup = (req, res, next) => {
-  const { email, name, password, confirmPassword } = req.body;
-  User.findOne({ email: email })
-    .then((userDoc) => {
-      if (userDoc) {
-        req.flash("error", "This email has already been registered.");
-        return res.redirect("/signup");
-      } else {
-        return bcrypt
-          .hash(password, 12)
-          .then((hash) => {
-            const user = new User({
-              email: email,
-              name: name,
-              password: hash,
-              cart: { items: [] },
-            });
-            return user.save();
-          })
-          .then((result) => {
-            res.redirect("/login");
-            return transporter.sendMail(
-              {
-                to: email,
-                from: "nodeshop@email.com",
-                subject: "NodeShop signup succeeded!",
-                html: "<h1>You successfully signed up!</h1>",
-              },
-              (err, info) => {
-                if (err) {
-                  return console.log(err);
-                }
-                console.log("Message send: %s", info.messageId);
-              }
-            );
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
+  const { email, name, password } = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    console.log(errors);
+    return res.status(422).render("auth/signup", {
+      path: "/signup",
+      pageTitle: "Signup",
+      errorMessage: errors.array().map((err) => err.msg)[0],
+      prevInput: {email: email}
+    });
+  }
+  bcrypt
+    .hash(password, 12)
+    .then((hash) => {
+      const user = new User({
+        email: email,
+        name: name,
+        password: hash,
+        cart: { items: [] },
+      });
+      return user.save();
     })
-    .catch((err) => console.log(err));
+    .then((result) => {
+      res.redirect("/login");
+      return transporter.sendMail(
+        {
+          to: email,
+          from: "nodeshop@email.com",
+          subject: "NodeShop signup succeeded!",
+          html: "<h1>You successfully signed up!</h1>",
+        },
+        (err, info) => {
+          if (err) {
+            return console.log(err);
+          }
+          console.log("Message send: %s", info.messageId);
+        }
+      );
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getReset = (req, res, next) => {
