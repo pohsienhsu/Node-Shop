@@ -15,6 +15,9 @@ exports.signupValidation = [
         }
       });
     }),
+  body("name", "Please enter a valid name with only alphabets")
+    .isLength({ min: 1 })
+    .isAlpha(),
   body(
     "password",
     "Please enter a password with only numbers and text and at least 5 characters"
@@ -22,7 +25,7 @@ exports.signupValidation = [
     .isLength({ min: 5 })
     .isAlphanumeric(),
   body("confirmPassword").custom((value, { req }) => {
-    if (!(value === req.body.password)) {
+    if (!(value === req.body.password) || value === "") {
       return Promise.reject("Passwords have to match!");
     } else {
       return true;
@@ -32,7 +35,10 @@ exports.signupValidation = [
 
 exports.loginValidation = [
   check("email").isEmail().withMessage("Please enter a valid email"),
-  body("password", "Password has to be only numbers and alphabets with a minimum of length 5")
+  body(
+    "password",
+    "Password has to be only numbers and alphabets with a minimum of length 5"
+  )
     .isLength({ min: 5 })
-    .isAlphanumeric()
+    .isAlphanumeric(),
 ];
