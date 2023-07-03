@@ -29,8 +29,9 @@ exports.getLogin = (req, res, next) => {
       path: "/login",
       errorMessage: errorMessage,
       prevInput: {
-        email: ""
-      }
+        email: "",
+      },
+      validationErrors: []
     });
   }
 };
@@ -44,10 +45,11 @@ exports.postLogin = (req, res, next) => {
     return res.status(422).render("auth/login", {
       path: "/login",
       pageTitle: "Login",
-      errorMessage: errors.array().map(err => err.msg)[0],
+      errorMessage: errors.array().map((err) => err.msg)[0],
       prevInput: {
-        email: email
-      }
+        email: email,
+      },
+      validationErrors: errors.array(),
     });
   }
 
@@ -95,9 +97,8 @@ exports.getSignup = (req, res, next) => {
     pageTitle: "Signup",
     path: "/signup",
     errorMessage: errorMessage,
-    prevInput: {
-      email: ""
-    }
+    prevInput: { email: "" },
+    validationErrors: [],
   });
 };
 
@@ -111,7 +112,8 @@ exports.postSignup = (req, res, next) => {
       path: "/signup",
       pageTitle: "Signup",
       errorMessage: errors.array().map((err) => err.msg)[0],
-      prevInput: {email: email}
+      prevInput: { email: email },
+      validationErrors: errors.array(),
     });
   }
   bcrypt
