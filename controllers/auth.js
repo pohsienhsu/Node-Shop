@@ -53,7 +53,7 @@ exports.postLogin = (req, res, next) => {
     });
   }
 
-  User.findOne({ email: value })
+  User.findOne({ email: email })
     .then((user) => {
       if (user) {
         return bcrypt

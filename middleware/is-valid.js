@@ -42,3 +42,31 @@ exports.loginValidation = [
     .isLength({ min: 5 })
     .isAlphanumeric(),
 ];
+
+exports.addProductValidation = [
+  body("title", "Please enter a valid product title with no special characters")
+    .trim()
+    .isLength({ min: 3 })
+    .isString(),
+  body("imageUrl", "Please enter a valid product image url").notEmpty().isURL(),
+  body("price", "Please enter a valid price").trim().notEmpty().isFloat({ min: 0 }),
+  body("description", "Please enter a valid description")
+    .trim()
+    .notEmpty()
+    .isLength({ max: 255 })
+    .withMessage("Description should not exceed 255 characters"),
+];
+
+exports.editProductValidation = [
+  body("title", "Please enter a valid product title with no special characters")
+    .trim()
+    .isLength({ min: 3 })
+    .isString(),
+  body("imageUrl", "Please enter a valid product image url").notEmpty().isURL(),
+  body("price", "Please enter a valid price").trim().notEmpty().isFloat({ min: 0 }),
+  body("description", "Please enter a valid description")
+    .trim()
+    .notEmpty()
+    .isLength({ max: 255 })
+    .withMessage("Description should not exceed 255 characters"),
+];
