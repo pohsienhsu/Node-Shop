@@ -1,4 +1,5 @@
 const { ObjectId } = require("mongodb");
+const { validationResult } = require("express-validator");
 
 const Product = require("../models/product");
 
@@ -10,11 +11,33 @@ exports.getAddProduct = (req, res, next) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
+    hasError: false,
+    errorMessage: null,
+    validationErrors: [],
   });
 };
 
 exports.postAddProduct = (req, res, next) => {
   const { title, imageUrl, price, description } = req.body;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.render("admin/edit-product", {
+      pageTitle: "Add Product",
+      path: "/admin/add-product",
+      editing: false,
+      product: {
+        title: title,
+        imageUrl: imageUrl,
+        price: price,
+        description: description,
+      },
+      hasError: true,
+      errorMessage: errors.array()[0].msg,
+      validationErrors: errors.array(),
+    });
+  }
+
   const product = new Product({
     title: title,
     imageUrl: imageUrl,
@@ -59,6 +82,9 @@ exports.getEditProduct = (req, res, next) => {
         path: "/admin/edit-product",
         editing: editMode,
         product: product,
+        hasError: false,
+        errorMessage: null,
+        validationErrors: [],
       });
     })
     .catch((err) => console.log(err));
@@ -66,8 +92,30 @@ exports.getEditProduct = (req, res, next) => {
 
 exports.postEditProduct = (req, res, next) => {
   const { id, title, imageUrl, price, description } = req.body;
+  const errors = validationResult(req);
 
-  Product.findById(id)
+  if (!errors.isEmpty()) {
+    console.log(id, title, imageUrl, price, description);
+    return res.render("admin/edit-product", {
+      pageTitle: `Edit ${title}`,
+      path: "/admin/edit-product",
+      editing: true,
+      product: {
+        _id: id,
+        title: title,
+        imageUrl: imageUrl,
+        price: price,
+        description: description,
+      },
+      hasError: true,
+      errorMessage: errors.array()[0].msg,
+      validationErrors: errors.array(),
+    });
+  }
+
+  console.log(id, title, imageUrl, price, description);
+
+  Product.findById(new ObjectId(id))
     .then((product) => {
       if (product.userId.toString() !== req.user._id.toString()) {
         return res.redirect("/");
