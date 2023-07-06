@@ -41,13 +41,12 @@ exports.postLogin = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    console.log(errors);
     return res.status(422).render("auth/login", {
       path: "/login",
       pageTitle: "Login",
       errorMessage: errors.array().map((err) => err.msg)[0],
       prevInput: {
-        email: email,
+        email: email === '@' ? '' : email,
       },
       validationErrors: errors.array(),
     });
@@ -72,7 +71,7 @@ exports.postLogin = (req, res, next) => {
                 pageTitle: "Login",
                 errorMessage: "Invalid email or password",
                 prevInput: {
-                  email: email,
+                  email: email === "@" ? "" : email,
                 },
                 validationErrors: [],
               });
@@ -85,7 +84,7 @@ exports.postLogin = (req, res, next) => {
           pageTitle: "Login",
           errorMessage: "Invalid email or password",
           prevInput: {
-            email: email,
+            email: email === "@" ? "" : email,
           },
           validationErrors: [],
         });
@@ -126,7 +125,7 @@ exports.postSignup = (req, res, next) => {
       path: "/signup",
       pageTitle: "Signup",
       errorMessage: errors.array().map((err) => err.msg)[0],
-      prevInput: { email: email },
+      prevInput: { email: email === "@" ? "" : email },
       validationErrors: errors.array(),
     });
   }
