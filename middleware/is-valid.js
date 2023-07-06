@@ -4,6 +4,7 @@ const User = require("../models/user");
 
 exports.signupValidation = [
   check("email")
+    .trim()
     .isEmail()
     .withMessage("Please enter a valid email")
     .custom((value, { req }) => {
@@ -14,14 +15,17 @@ exports.signupValidation = [
           );
         }
       });
-    }),
+    })
+    .normalizeEmail(),
   body("name", "Please enter a valid name with only alphabets")
+    .trim()
     .isLength({ min: 1 })
     .isAlpha(),
   body(
     "password",
     "Please enter a password with only numbers and text and at least 5 characters"
   )
+    .trim()
     .isLength({ min: 5 })
     .isAlphanumeric(),
   body("confirmPassword").custom((value, { req }) => {
@@ -34,11 +38,16 @@ exports.signupValidation = [
 ];
 
 exports.loginValidation = [
-  check("email").isEmail().withMessage("Please enter a valid email"),
+  check("email")
+    .trim()
+    .isEmail()
+    .withMessage("Please enter a valid email")
+    .normalizeEmail(),
   body(
     "password",
     "Password has to be only numbers and alphabets with a minimum of length 5"
   )
+    .trim()
     .isLength({ min: 5 })
     .isAlphanumeric(),
 ];
@@ -49,7 +58,10 @@ exports.addProductValidation = [
     .isLength({ min: 3 })
     .isString(),
   body("imageUrl", "Please enter a valid product image url").notEmpty().isURL(),
-  body("price", "Please enter a valid price").trim().notEmpty().isFloat({ min: 0 }),
+  body("price", "Please enter a valid price")
+    .trim()
+    .notEmpty()
+    .isFloat({ min: 0 }),
   body("description", "Please enter a valid description")
     .trim()
     .notEmpty()
@@ -63,7 +75,10 @@ exports.editProductValidation = [
     .isLength({ min: 3 })
     .isString(),
   body("imageUrl", "Please enter a valid product image url").notEmpty().isURL(),
-  body("price", "Please enter a valid price").trim().notEmpty().isFloat({ min: 0 }),
+  body("price", "Please enter a valid price")
+    .trim()
+    .notEmpty()
+    .isFloat({ min: 0 }),
   body("description", "Please enter a valid description")
     .trim()
     .notEmpty()
