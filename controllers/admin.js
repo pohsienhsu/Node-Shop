@@ -51,7 +51,11 @@ exports.postAddProduct = (req, res, next) => {
       console.log("Added a product...");
       res.redirect("/");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.getProducts = (req, res, next) => {
@@ -63,7 +67,11 @@ exports.getProducts = (req, res, next) => {
         path: "/admin/products",
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.getEditProduct = (req, res, next) => {
@@ -87,7 +95,11 @@ exports.getEditProduct = (req, res, next) => {
         validationErrors: [],
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.postEditProduct = (req, res, next) => {
@@ -95,7 +107,6 @@ exports.postEditProduct = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    console.log(id, title, imageUrl, price, description);
     return res.render("admin/edit-product", {
       pageTitle: `Edit ${title}`,
       path: "/admin/edit-product",
@@ -113,8 +124,6 @@ exports.postEditProduct = (req, res, next) => {
     });
   }
 
-  console.log(id, title, imageUrl, price, description);
-
   Product.findById(new ObjectId(id))
     .then((product) => {
       if (product.userId.toString() !== req.user._id.toString()) {
@@ -130,9 +139,17 @@ exports.postEditProduct = (req, res, next) => {
           console.log("Updated Product!");
           res.redirect("/admin/products");
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          const error = new Error(err);
+          error.httpStatusCode = 500;
+          return next(error);
+        });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 exports.postDeleteProduct = (req, res, next) => {
@@ -142,5 +159,9 @@ exports.postDeleteProduct = (req, res, next) => {
       console.log("Deleted Product!");
       res.redirect("/admin/products");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
