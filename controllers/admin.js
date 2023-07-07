@@ -18,8 +18,26 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-  const { title, imageUrl, price, description } = req.body;
+  const { title, price, description } = req.body;
+  const image = req.file;
+  console.log(image);
   const errors = validationResult(req);
+
+  if (!image) {
+    return res.render("admin/edit-product", {
+      pageTitle: "Add Product",
+      path: "/admin/add-product",
+      editing: false,
+      product: {
+        title: title,
+        price: price,
+        description: description,
+      },
+      hasError: true,
+      errorMessage: "Please attach a image file or correct image format for the product.",
+      validationErrors: [],
+    });
+  }
 
   if (!errors.isEmpty()) {
     return res.render("admin/edit-product", {
@@ -28,7 +46,6 @@ exports.postAddProduct = (req, res, next) => {
       editing: false,
       product: {
         title: title,
-        imageUrl: imageUrl,
         price: price,
         description: description,
       },
@@ -37,6 +54,8 @@ exports.postAddProduct = (req, res, next) => {
       validationErrors: errors.array(),
     });
   }
+
+  const imageUrl = image.path;
 
   const product = new Product({
     title: title,
@@ -103,7 +122,8 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-  const { id, title, imageUrl, price, description } = req.body;
+  const { id, title, price, description } = req.body;
+  const image = req.file;
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -114,7 +134,6 @@ exports.postEditProduct = (req, res, next) => {
       product: {
         _id: id,
         title: title,
-        imageUrl: imageUrl,
         price: price,
         description: description,
       },
@@ -130,7 +149,9 @@ exports.postEditProduct = (req, res, next) => {
         return res.redirect("/");
       }
       product.title = title;
-      product.imageUrl = imageUrl;
+      if (image) {
+        product.imageUrl = image.path;
+      }
       product.price = price;
       product.description = description;
       product
