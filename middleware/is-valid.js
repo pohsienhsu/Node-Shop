@@ -57,7 +57,6 @@ exports.addProductValidation = [
     .trim()
     .isLength({ min: 3 })
     .isString(),
-  body("imageUrl", "Please enter a valid product image url").notEmpty().isURL(),
   body("price", "Please enter a valid price")
     .trim()
     .notEmpty()
@@ -74,7 +73,6 @@ exports.editProductValidation = [
     .trim()
     .isLength({ min: 3 })
     .isString(),
-  body("imageUrl", "Please enter a valid product image url").notEmpty().isURL(),
   body("price", "Please enter a valid price")
     .trim()
     .notEmpty()
