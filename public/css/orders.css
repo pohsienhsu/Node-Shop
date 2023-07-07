@@ -29,25 +29,6 @@
     align-items: center;
 }
 
-.orders__products-invoice {
-  display: inline-block;
-  padding: 0.25rem 1rem;
-  text-decoration: none;
-  font: inherit;
-  border: 1px solid #3d79c7;
-  color: #3d79c7;
-  background: white;
-  border-radius: 3px;
-  cursor: pointer;
-  
-}
-
-.orders__products-invoice:hover,
-.orders__products-invoice:active {
-  background-color: #3d79c7;
-  color: white;
-}
-
 .orders__item-title {
   display: flex;
   justify-content: space-between;
