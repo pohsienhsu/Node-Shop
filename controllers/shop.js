@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const PDFDocument = require("pdfkit");
+
 const Product = require("../models/product");
 const Order = require("../models/order");
 
@@ -140,7 +142,33 @@ exports.getInvoice = (req, res, next) => {
         return next(new Error("unauthorized"));
       }
       const invoiceName = "invoice-" + orderId + ".pdf";
-      const invoicePath = path.join("data", "invoices", "invoiceName");
+      const invoicePath = path.join("data", "invoices", invoiceName);
+
+      const pdfDoc = new PDFDocument();
+      pdfDoc.pipe(fs.createWriteStream(invoicePath));
+      pdfDoc.pipe(res);
+
+      pdfDoc.text("Invoice - " + order._id.toString());
+      pdfDoc
+        .text("==========================================================")
+        .moveDown();
+      pdfDoc
+        .list(
+          order.products.map(({ product, quantity }) => {
+            return `${product.title} ($${product.price}) - x${quantity}`;
+          })
+        )
+        .moveDown();
+      pdfDoc
+        .text("----------------------------------------------------------")
+        .moveDown();
+      pdfDoc.text(
+        "Total Amount: $" +
+          order.products.reduce((sum, item) => {
+            return sum + +item.product.price * +item.quantity;
+          }, 0)
+      );
+      pdfDoc.end();
       // fs.readFileSync(invoicePath, (err, data) => {
       //   if (err) {
       //     return next(err);
