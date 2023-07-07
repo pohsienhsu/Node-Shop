@@ -26,4 +26,10 @@
     padding: 0.5rem;
     border: 1px solid #00695c;
     color: #00695c;
+    align-items: center;
+}
+
+.orders__item-title {
+  display: flex;
+  justify-content: space-between;
 }

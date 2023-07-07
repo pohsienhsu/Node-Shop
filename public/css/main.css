@@ -225,6 +225,17 @@ form {
   color: white;
 }
 
+.btn.info {
+  color: #3d79c7;
+  border-color: #3d79c7;
+}
+
+.btn.info:hover,
+.btn.info:active {
+  background: #3d79c7;
+  color: white;
+}
+
 .user-message {
   margin: auto;
   width: 90%;

@@ -2,6 +2,7 @@ const { ObjectId } = require("mongodb");
 const { validationResult } = require("express-validator");
 
 const Product = require("../models/product");
+const fileHelper = require("../util/file");
 
 exports.getAddProduct = (req, res, next) => {
   if (!req.session.isLoggedIn) {
@@ -34,7 +35,8 @@ exports.postAddProduct = (req, res, next) => {
         description: description,
       },
       hasError: true,
-      errorMessage: "Please attach a image file or correct image format for the product.",
+      errorMessage:
+        "Please attach a image file or correct image format for the product.",
       validationErrors: [],
     });
   }
@@ -150,6 +152,7 @@ exports.postEditProduct = (req, res, next) => {
       }
       product.title = title;
       if (image) {
+        fileHelper.deleteFile(product.imageUrl);
         product.imageUrl = image.path;
       }
       product.price = price;
@@ -175,7 +178,14 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
   const { id } = req.body;
-  Product.deleteOne({ _id: id, userId: req.user._id })
+  Product.findById(id)
+    .then((product) => {
+      if (!product) {
+        return next(new Error("Product not found!"));
+      }
+      fileHelper.deleteFile(product.imageUrl);
+      return Product.deleteOne({ _id: id, userId: req.user._id });
+    })
     .then((result) => {
       console.log("Deleted Product!");
       res.redirect("/admin/products");
