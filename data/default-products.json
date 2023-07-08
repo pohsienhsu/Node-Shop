@@ -1,0 +1,80 @@
+[
+  {
+    "_id": {
+      "$oid": "64a99bd735e9b12ee42588bc"
+    },
+    "title": "Fuji Camera",
+    "imageUrl": "images/2023-07-08T17:24:39.132Z-fuji-camera.jpg",
+    "price": 199.99,
+    "description": "The latest camera technology",
+    "userId": {
+      "$oid": "648f4eb7c1c336ec00b8bee0"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "64a99c18c22d000020449257"
+    },
+    "title": "Scented Candle",
+    "imageUrl": "images/2023-07-08T17:24:39.132Z-scented-candle.jpg",
+    "price": 15.99,
+    "description": "A scent of the pine forest.",
+    "userId": {
+      "$oid": "648f4eb7c1c336ec00b8bee0"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "64a99cf4c22d000020449258"
+    },
+    "title": "Coffe Mugs",
+    "imageUrl": "images/2023-07-08T17:24:39.132Z-coffee-mugs.jpg",
+    "price": 29.49,
+    "description": "A pair of glass coffee mugs for cute couples.",
+    "userId": {
+      "$oid": "648f4eb7c1c336ec00b8bee0"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "64a99d08c22d000020449259"
+    },
+    "title": "Pineapple",
+    "imageUrl": "images/2023-07-08T17:24:39.132Z-pineapple.jpg",
+    "price": 3.99,
+    "description": "A really nice looking pineapple!",
+    "userId": {
+      "$oid": "648f4eb7c1c336ec00b8bee0"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "64a99d16c22d00002044925a"
+    },
+    "title": "Ordinary Skin Care Set",
+    "imageUrl": "images/2023-07-08T17:24:39.132Z-skincare.jpg",
+    "price": 79.29,
+    "description": "The complete skin care routine set from Ordinary.",
+    "userId": {
+      "$oid": "648f4eb7c1c336ec00b8bee0"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "64a9a050c22d00002044925b"
+    },
+    "title": "Coke Zero",
+    "imageUrl": "images/2023-07-08T17:24:39.132Z-code.jpg",
+    "price": 1.99,
+    "description": "A guilty free can of coke.",
+    "userId": {
+      "$oid": "648f4eb7c1c336ec00b8bee0"
+    },
+    "__v": 0
+  }
+]
