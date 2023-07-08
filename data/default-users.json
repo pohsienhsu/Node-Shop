@@ -1,0 +1,44 @@
+[{
+  "_id": {
+    "$oid": "648f4eb7c1c336ec00b8bee0"
+  },
+  "name": "Admin",
+  "email": "admin@gmail.com",
+  "password": "$2a$12$D3dkZfJkMTNO4qJ6j8gUNuYy27B3LUo72A4PVgBQrAF8k7JU565ze",
+  "cart": {
+    "items": []
+  },
+  "__v": 5,
+  "resetToken": "bb244fc7956fc94dbe9be9c1db4996561b23cff0c1923d3f34f6f582d9b8dd86",
+  "resetTokenExpiration": {
+    "$date": "2023-07-01T21:48:42.151Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "64a333c52b3c1e8d277208a7"
+  },
+  "name": "Habo",
+  "email": "habohsu930@gmail.com",
+  "password": "$2a$12$mVXZXp4Yi7T4XFJqpxaUjuQnBbJR4/KZ33wFdZifglfljvzegBPh.",
+  "cart": {
+    "items": []
+  },
+  "__v": 0,
+  "resetToken": "16ae0d01bc8e0fc0e7619d4ad36eef985cd81598d06c17e2e9a0a248d75167cf",
+  "resetTokenExpiration": {
+    "$date": "2023-07-07T23:21:51.376Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "64a88ec17be5b56b08ef659b"
+  },
+  "name": "Laura",
+  "email": "laura.toledo.sanchez@gmail.com",
+  "password": "$2a$12$jpGE5k8h.Lax4i14Ewg/4uDxmYa80qg9tKCSWeBOj0sIq4W4QIz4e",
+  "cart": {
+    "items": []
+  },
+  "__v": 1
+}]

@@ -1,0 +1,17 @@
+<section class="pagination">
+  <% if (pageData.curr !== 1) { %>
+    <a href="?page=1">1</a>
+  <% } %> 
+  <% if (pageData.hasPrevious && pageData.curr > 2) { %>
+    <a href="?page=<%= pageData.curr - 1 %>"><%= pageData.curr - 1 %></a>
+  <% } %>
+
+  <a href="?page=<%= pageData.curr %>" class="active"><%= pageData.curr %></a>
+  
+  <% if (pageData.hasNext) { %>
+    <a href="?page=<%= pageData.curr + 1 %>"><%= pageData.curr + 1 %></a>
+  <% } %> 
+  <% if (pageData.last !== pageData.curr && pageData.last !== pageData.curr + 1) { %>
+    <a href="?page=<%= pageData.last %>"><%= pageData.last %></a>
+  <% } %>
+</section>
