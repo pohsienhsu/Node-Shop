@@ -3,6 +3,7 @@ const { validationResult } = require("express-validator");
 
 const Product = require("../models/product");
 const fileHelper = require("../util/file");
+const Pagination = require("../util/pagination");
 
 exports.getAddProduct = (req, res, next) => {
   if (!req.session.isLoggedIn) {
@@ -80,19 +81,24 @@ exports.postAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  Product.find({ userId: req.user._id })
-    .then((products) => {
+  const page = +req.query.page || 1;
+
+  Pagination.productPagination(
+    page,
+    (products, pageData) => {
       res.render("admin/products", {
         prods: products,
         pageTitle: "Admin Products",
         path: "/admin/products",
+        pageData: pageData,
       });
-    })
-    .catch((err) => {
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    });
+    },
+    { userId: req.user._id }
+  ).catch((err) => {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  });
 };
 
 exports.getEditProduct = (req, res, next) => {
