@@ -34,6 +34,7 @@
     "nodemailer": "^6.9.3",
     "pdfkit": "^0.13.0",
     "sequelize": "^6.32.0",
+    "stripe": "^12.12.0",
     "tiny-csrf": "^1.1.3"
   }
 }

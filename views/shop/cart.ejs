@@ -21,10 +21,11 @@
                 </ul>
                 <div class="centered">
                   <h1>Total Amount: <%= totalPrice.toFixed(2) %></h1>
-                  <form action="/create-order" method="POST">
+                  <!-- <form action="/create-order" method="POST">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
                     <button type="submit" class="btn">Order</button>
-                  </form>
+                  </form> -->
+                  <a class="btn info" href="/checkout">Checkout</a>
                 </div>
             <% } else { %>
                 <h1>No Products in Cart!</h1>
