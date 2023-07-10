@@ -19,7 +19,8 @@
     "body-parser": "^1.18.3",
     "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^3.1.1",
-    "csrf-sync": "^4.0.1",
+    "cookie-parser": "^1.4.6",
+    "csurf": "^1.11.0",
     "dotenv": "^16.1.4",
     "ejs": "^3.1.9",
     "express": "^4.16.3",
@@ -32,6 +33,7 @@
     "mysql2": "^3.3.3",
     "nodemailer": "^6.9.3",
     "pdfkit": "^0.13.0",
-    "sequelize": "^6.32.0"
+    "sequelize": "^6.32.0",
+    "tiny-csrf": "^1.1.3"
   }
 }

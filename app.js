@@ -6,8 +6,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
-// const csrf = require("csurf");
-const {csrfSync} = require('csrf-sync');
+const csrf = require("csurf");
 const flash = require('connect-flash');
 const multer = require('multer');
 
@@ -23,11 +22,7 @@ const store = new MongoDBStore({
   collection: "sessions",
 });
 
-const { csrfSynchronisedProtection } = csrfSync({
-  getTokenFromRequest: (req) => {
-    return req.body["CSRFToken"];
-  }, // Used to retrieve the token submitted by the user in a form
-});
+const csrfProtection = csrf();
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -68,7 +63,7 @@ app.use(
   })
 );
 
-app.use(csrfSynchronisedProtection);
+app.use(csrfProtection);
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.session.isLoggedIn ? true : false;
   res.locals.csrfToken = req.csrfToken();
@@ -97,16 +92,17 @@ app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 app.use(authRoutes);
 
+app.get("/500", errorController.get500);
+
 app.use(errorController.get404);
 
 app.use((error, req, res, next) => {
-  res.status(500).render('500', {
-    pageTitle: 'Error!',
+  res.status(500).render("500", {
+    pageTitle: "Error!",
     path: "/500",
     isAuthenticated: req.session.isLoggedIn,
-  })
-  res.redirect('/500');
-})
+  });
+});
 
 mongoose
   .connect(MONGODB_URI)

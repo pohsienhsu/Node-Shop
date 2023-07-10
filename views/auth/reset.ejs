@@ -15,7 +15,7 @@
                 <label for="email">E-Mail</label>
                 <input type="email" name="email" id="email" >
             </div>
-            <input type="hidden" name="CSRFToken" value="<%= csrfToken %>" >
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" >
             <div class="login-buttons">
               <button class="btn" type="submit">Reset Password</button>
               <a class="btn danger" href="/login">Cancel</a>
